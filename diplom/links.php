@@ -107,6 +107,7 @@ if(isset($_GET['project'])){
 							echo $resGL; //gl
 							echo '<td><input type="checkbox" value='.$value['Id'].' form="delurl" /></td>'; //deystvie
 							echo '</tr>';
+							ob_flush();
 							flush();
 							$i++;
 						

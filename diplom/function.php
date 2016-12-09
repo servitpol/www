@@ -14,13 +14,13 @@ if (isset($_POST['site'])) {
 		
 		echo '<tr>';
 		echo '<td>'.$i.'</td>';
-		writeRow ($site, $param, $text, $cena, $vremya);
+		writeRow ($site, $param, $cena, $vremya);
 		getYAP($site, $text);
 		echo '<td>D</td>';
 		//getYAL($site, $text);
 		getGP($site, $text);
 		getGL($site, $text);
-		
+		echo '<td><input type="checkbox" value='.$value['Id'].' form="delurl" /></td>';
 		echo '</tr>';
 }
 
@@ -35,8 +35,8 @@ function getAllIndex ($site, $param, $text, $cena, $vremya) {
 		echo '</tr>';
 }
 
-function writeRow ($site, $param, $text, $cena, $vremya) {
-		$wert = ('<td>'.$site.'</td><td>'.$param.'</td><td>'.$text.'</td><td>'.$cena.'</td><td>'.$vremya.'</td>');
+function writeRow ($site, $param, $cena, $vremya) {
+		$wert = ('<td>'.$site.'</td><td>'.$param.'</td><td>'.$cena.'</td><td>'.$vremya.'</td>');
 		echo $wert;
 }
 

@@ -163,7 +163,7 @@ var arr = <?php echo $js; ?>;
 	$("#information").text("Идет проверка индексации...");
 	},                      //вызов ф-ции ожидания ответа    
        success: function (data) {                          //функция вывода результата обработчика через ajax
-	$('#ajaxinput').replaceWith(data);				
+	$('#ajaxinput').append(data);				
 	}                          //вызов ф-ции вывода результата
    });
  

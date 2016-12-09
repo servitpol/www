@@ -124,44 +124,4 @@ function getGL($site, $text) {
 			echo ($json->data) ? "<td>+</td>" : "<td>-</td>";
 		}
 }
-
-
-function getLinksJson ($arra) {
-		$json = json_encode($arra);	
-		return $json;
-}
-
-?>
-<?php
-include "lib/nusoap.php";
-		
-//echo "<pre>";
-$advert_url = "http://api.mainlink.ru/seo.asmx?WSDL"; 
-$login_url = "http://api.mainlink.ru/start.asmx?WSDL";
-$login = new nusoap_client($login_url, true); 
-$advert = new nusoap_client($advert_url, true); 
-$login->setUseCurl(1); 
-$login->call('sys_LogIn', array('Login' => 'smartinetseo', 'Password' => 'Dfnheirf', 'PrivateKey' => 'bb99405f-92a5-4dd9-8bb8-96b6153c13e5')); 
-$cookies = $login->getCookies(); 
-foreach ($cookies as $cookie) 
-{ 
-$advert->setCookie($cookie['name'], $cookie['value']); 
-}
-/* 
-POST /seo.asmx HTTP/1.1
-Host: api.mainlink.ru
-Content-Type: text/xml; charset=utf-8
-Content-Length: length
-SOAPAction: "http://api.mainlink.ru/LinkGet"
-<?xml version="1.0" encoding="utf-8"?>
-<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-  <soap:Body>
-    <LinkGet xmlns="http://api.mainlink.ru/">
-      <id>int</id>
-    </LinkGet>
-  </soap:Body>
-</soap:Envelope>
-*/
-//$projects = $advert->call('LinksGet', array('page' => 4231715));
-//var_dump($projects);
 ?>

@@ -33,31 +33,21 @@ if (isset($_GET['exits'])) {
   </thead>
 <tbody>
 <?php
-	$projects = $advert->call('ProjectsGet', array('archive' => true));
-		/*<Project>
-          <Id>int</Id>
-          <Archive>boolean</Archive>
-          <Name>string</Name>
-          <Www>string</Www>
-          <Mode>Commercial or InternetShop or Satellite or SeoHammer or Manual</Mode>
-          <Created>dateTime</Created>
-          <Company>int</Company>
-        </Project> */
+$projects = $advert->call('ProjectsGetByCompany', array('company' => 217139, 'archive' => true));
 $i = 1;
-foreach($projects as $key => $project){
-	foreach($project as $keys) {
-		foreach($keys as $value) {
-			if($value['Archive'] == 'false'){
+foreach($projects as $key){
+	foreach($key as $value) {
+			
 			echo '<tr>'; 	
 			echo '<td>'.$i.'</td>';	
-			echo '<td><a href="links.php?project='.$value['Id'].'&name='.$value['Www'].'" target="_blank">'.$value['Www'].'</a></td>';
+			echo '<td><a href="links.php?project='.$value['Id'].'" target="_blank">'.$value['Www'].'</a></td>';
 			echo '<td>'.$value['Created'].'</td>';
 			echo '</tr>';
 			$i++;
-			}
+
 		}
 	}
-}
+
 ?>
 </tbody>
 </table>

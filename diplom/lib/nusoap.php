@@ -3543,7 +3543,7 @@ class nusoap_server extends nusoap_base {
 	 * @var boolean
 	 * @access public
 	 */
-    var $decode_utf8 = true;
+    var $decode_utf8 = false;
 
 	/**
 	 * HTTP headers of response
@@ -6563,7 +6563,7 @@ class nusoap_parser extends nusoap_base {
 	// array of id => hrefs => pos
 	var $multirefs = array();
 	// toggle for auto-decoding element content
-	var $decode_utf8 = true;
+	var $decode_utf8 = false;
 
 	/**
 	* constructor that actually does the parsing
@@ -7208,7 +7208,7 @@ class nusoap_client extends nusoap_base  {
 	var $response = '';				// HTTP response
 	var $responseData = '';			// SOAP payload of response
 	var $cookies = array();			// Cookies from response or for request
-    var $decode_utf8 = true;		// toggles whether the parser decodes element content w/ utf8_decode()
+    var $decode_utf8 = false;		// toggles whether the parser decodes element content w/ utf8_decode()
 	var $operations = array();		// WSDL operations, empty for WSDL initialization error
 	var $curl_options = array();	// User-specified cURL options
 	var $bindingType = '';			// WSDL operation binding type

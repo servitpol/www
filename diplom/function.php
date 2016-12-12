@@ -1,46 +1,46 @@
 <?php
-// В PHP 4.1.0 и более ранних версиях следует использовать $HTTP_POST_FILES
-// вместо $_FILES.
+//http://savvateev.org/blog/31/ - обход огрнаичения одновременного кол-ва запросов
 
-if (isset($_POST['site'])) {
-		
-		$site = ($_POST['site']);
+if (isset($_POST['site'])) {  //перехватывает аякс
+		$name = $_POST['name'];
+		$site = 'http://'.$_POST['site'];
 		$param = ($_POST['param']);
 		$text = ($_POST['content']);
 		$cena = ($_POST['cena']);
 		$vremya = ($_POST['vremya']);
 		$i = ($_POST['iter']);
-		//getAllIndex ($site, $param, $text, $cena, $vremya);
+		$yap = getYAP($site, $text);
+		//$yal = getYAL($site, $text);
+		$gp = getGP($site, $text);
+		$gl = getGL($site, $text);
 		
 		echo '<tr>';
 		echo '<td>'.$i.'</td>';
 		writeRow ($site, $param, $cena, $vremya);
-		getYAP($site, $text);
+		echo '<td>'.$yap.'</td>';
+		//echo '<td>'.$yap.'D</td>';
 		echo '<td>D</td>';
-		//getYAL($site, $text);
-		getGP($site, $text);
-		getGL($site, $text);
+		echo '<td>'.$gp.'</td>';
+		echo '<td>'.$gl.'</td>';
 		echo '<td><input type="checkbox" value='.$value['Id'].' form="delurl" /></td>';
 		echo '</tr>';
+
+		$res = array($site.';'.$param.';'.$text.';'.$cena.';'.$yap.';'.$gp.';'.$gl);
+		$fp = fopen('file'.$name.'.csv', 'a+');
+		fwrite($fp,b"\xEF\xBB\xBF" );
+		fputcsv($fp, $res, ";", " ");
+		fclose($fp);
 }
 
 
-function getAllIndex ($site, $param, $text, $cena, $vremya) {
-		echo '<tr>';
-		writeRow ($site, $param, $text, $cena, $vremya);
-		getYAP($site, $text);
-		getYAL($site, $text);
-		getGP($site, $text);
-		getGL($site, $text);
-		echo '</tr>';
-}
 
-function writeRow ($site, $param, $cena, $vremya) {
+
+function writeRow ($site, $param, $cena, $vremya) { //рисует колонки в таблице
 		$wert = ('<td>'.$site.'</td><td>'.$param.'</td><td>'.$cena.'</td><td>'.$vremya.'</td>');
 		echo $wert;
 }
 
-function getYAP($site, $text) {
+function getYAP($site, $text) {  //яндекс страницы
 	
 		$array = array();
         $array["user"] = 'smartinetseo@gmail.com';
@@ -52,17 +52,24 @@ function getYAP($site, $text) {
 		$content = @file_get_contents("http://api.megaindex.ru/scan_yandex_page_index?".http_build_query($array));    //запрос индексации страницы в яндексе
         $json = json_decode($content);
          if( !is_object($json) ){
-            echo '<td>Не удалось разобрать данные</td>';
+            $res = 'Не удалось разобрать данные';
+			return $res;
 		} else if ($json->status != 0) {
         $res = $json->err_msg;
-        echo '<td>'.$res.'</td>';
+        return $res;
 		} else {
-			echo ($json->data) ? "<td>+</td>" : "<td>-</td>";
+			if($json->data) {
+			$res =	'1';
+			return $res;
+			} else {				
+			$res = '0';
+			return $res;
 		}
 		
 }
+}
 
-function getYAL($site, $text) {
+function getYAL($site, $text) {		//яндекс ссылка
 		
 		$array = array();
         $array["user"] = 'smartinetseo@gmail.com';
@@ -74,16 +81,23 @@ function getYAL($site, $text) {
 		$content = @file_get_contents("http://api.megaindex.ru/scan_yandex_link_index?".http_build_query($array));    //запрос индексации ссылки в яндексе
         $json = json_decode($content);
          if( !is_object($json) ){
-            echo '<td>Не удалось разобрать данные</td>';
+            $res = 'Не удалось разобрать данные';
+			return $res;
 		} else if ($json->status != 0) {
         $res = $json->err_msg;
-        echo '<td>'.$res.'</td>';
+        return $res;
 		} else {
-			echo ($json->data) ? "<td>+</td>" : "<td>-</td>";
+			if($json->data) {
+			$res =	'1';
+			return $res;
+			} else {				
+			$res = '0';
+			return $res;
 		}
+}
 }		
 
-function getGP($site, $text) {
+function getGP($site, $text) {		//гугл страница
 		
 		$array = array();
         $array["user"] = 'smartinetseo@gmail.com';
@@ -95,16 +109,23 @@ function getGP($site, $text) {
 		$content = @file_get_contents("http://api.megaindex.ru/scan_google_page_index?".http_build_query($array));    //запрос индексации страницы в гугле
 		$json = json_decode($content);
          if( !is_object($json) ){
-            echo '<td>Не удалось разобрать данные</td>';
+            $res = 'Не удалось разобрать данные';
+			return $res;
 		} else if ($json->status != 0) {
         $res = $json->err_msg;
-        echo '<td>'.$res.'</td>';
+        return $res;
 		} else {
-			echo ($json->data) ? "<td>+</td>" : "<td>-</td>";
+			if($json->data) {
+			$res =	'1';
+			return $res;
+			} else {				
+			$res = '0';
+			return $res;
 		}
 }
-		
-function getGL($site, $text) {
+}
+	
+function getGL($site, $text) {		//гугл ссылка
 		
 		$array = array();
         $array["user"] = 'smartinetseo@gmail.com';
@@ -116,19 +137,20 @@ function getGL($site, $text) {
 		$content = @file_get_contents("http://api.megaindex.ru/scan_google_link_index?".http_build_query($array));    //запрос индексации ссылки в гугле
 		$json = json_decode($content);
          if( !is_object($json) ){
-            echo '<td>Не удалось разобрать данные</td>';
+            $res = 'Не удалось разобрать данные';
+			return $res;
 		} else if ($json->status != 0) {
         $res = $json->err_msg;
-        echo '<td>'.$res.'</td>';
+        return $res;
 		} else {
-			echo ($json->data) ? "<td>+</td>" : "<td>-</td>";
+			if($json->data) {
+			$res =	'1';
+			return $res;
+			} else {				
+			$res = '0';
+			return $res;
 		}
 }
-
-
-function getLinksJson ($arra) {
-		$json = json_encode($arra);	
-		return $json;
 }
 
 ?>

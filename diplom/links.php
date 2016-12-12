@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: text/html; charset=utf-8');
+
 include_once('header.php'); 
 include_once('function.php'); 
 include_once('connect.php'); 
@@ -34,7 +34,7 @@ if (isset($_GET['exits'])) {
       <th>Название проекта</th>
       <th>ТИЦ</th>
       <th>Цена</th>
-	  <th>Дата создания проекта</th>
+	  <th>Дата покупки ссылки</th>
 	  <th>YAP</th>
       <th>YAL</th>
 	  <th>GP</th>
@@ -55,7 +55,7 @@ if(isset($_GET['project'])){
 			foreach($keys as $value) {
 				
 				$idpage = $value['Id'];
-				$projects = $advert->call('LinksGet', array('page' => $idpage));
+				$projects = $advert->call('LinksGet', array('page' => $idpage), 'utf-8');
 				/*
 				<Link>
 				  <Id>int</Id>
@@ -87,13 +87,12 @@ if(isset($_GET['project'])){
 					if($project) {
 					foreach($project as $keys) {
 						foreach($keys as $value) {
-							//echo '<pre>';
-							//var_dump($value);
-							$url = iconv("UTF-8", "windows-1251", $value['PageSiteUri']);
+							$url = $value['PageSiteUri'];
 							$date = explode('T', $value['Created']);
 							echo '<tr>'; 	
 							echo '<td>'.$i.'</td>';	//id
 							echo '<td><a href="'.$url.'" target="_blank">'.$url.'</a></td>'; //name
+				
 							if($value['Cy'] == 0){
 								echo '<td><span style="color:red;">'.$value['Cy'].'</span></td>'; //tic
 								} else {
@@ -126,7 +125,7 @@ if(isset($_GET['project'])){
 }
 //echo '<pre>';
 //var_dump($stack);
-$js = getLinksJson ($stack);
+$js = json_encode($stack);
 //echo $js;
 ?>
 
@@ -136,12 +135,13 @@ $js = getLinksJson ($stack);
 <script>
 
 var arr = <?php echo $js; ?>;
+var nam = <?php echo $_GET['project']; ?>;
 
 </script>
 
 <script>
 	function getAjax() {
-	for (var i = 0; i < arr.length; i++) {
+	for (var i = 0; i < 3; i++) { //arr.length
 	var url = arr[i]["PageSiteUri"];
 	var tic = arr[i]["Cy"];
 	var text = arr[i]["Anchor"];
@@ -152,6 +152,7 @@ var arr = <?php echo $js; ?>;
        url: "function.php",                           //обработчик
 	   type: "POST",                                
 	   data: {
+			name : nam,
 		    iter : i,
 			site : url,
 			param : tic,
@@ -163,7 +164,7 @@ var arr = <?php echo $js; ?>;
 	$("#information").text("Идет проверка индексации...");
 	},                      //вызов ф-ции ожидания ответа    
        success: function (data) {                          //функция вывода результата обработчика через ajax
-	$('#ajaxinput').append(data);				
+	$('#ajaxinput').prepend(data);				
 	}                          //вызов ф-ции вывода результата
    });
  
@@ -174,12 +175,11 @@ var arr = <?php echo $js; ?>;
 </script>
 </div>
 <div class="sidebar col-lg-3">
-<form method=""><button type="submit" class="btn btn-warning" form="delurl">Удалить</button>
+<form method=""><button type="submit" class="btn btn-warning" form="delurl">Удалить</button></form>
 <form>
 <input type="button" id="getanswer" onclick="getAjax()" class="btn" value="Запустить проверку" />
 <div id="information"></div>
 </form>
-
 </div>
 </div>
 <?php include_once('footer.php'); ?>

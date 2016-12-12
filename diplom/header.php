@@ -23,7 +23,9 @@
     <script src="sisyphus/sisyphus.js"></script>
 	<script src="ckeditor/ckeditor.js"></script>
   </head>
-
+<?php
+header("Content-Type: text/html; charset=UTF-8");
+?>
 <body>
 <div class="container-fluid content">
 <div class="row">
